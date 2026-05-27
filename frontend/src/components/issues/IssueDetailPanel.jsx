@@ -112,17 +112,31 @@ export function IssueDetailPanel({ issueId, onClose }) {
         transition={{ type: 'spring', stiffness: 350, damping: 35 }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[#E8E2DA]">
-          <h2 className="text-sm font-semibold text-stone-700">
-            {editing ? 'Edit Issue' : 'Issue Detail'}
-          </h2>
-          <div className="flex items-center gap-1">
+        <div
+          className="flex items-start justify-between px-5 py-4 flex-shrink-0"
+          style={{ background: 'linear-gradient(135deg, #06111E 0%, #0B1D35 100%)' }}
+        >
+          <div className="flex-1 min-w-0 mr-3">
+            {!editing && issue && (
+              <p className="text-xs font-semibold uppercase tracking-wider mb-1"
+                style={{ color: 'rgba(15,252,190,0.7)' }}>
+                {issue.category}
+              </p>
+            )}
+            <h2 className="text-sm font-semibold text-white leading-snug">
+              {editing ? 'Edit Issue' : (issue?.title || 'Issue Detail')}
+            </h2>
+          </div>
+          <div className="flex items-center gap-0.5 flex-shrink-0">
             {isOwner && !editing && !isLoading && (
               <>
                 <button
                   onClick={() => setEditing(true)}
                   title="Edit this issue"
-                  className="p-1.5 rounded-lg text-stone-400 hover:text-brand-700 hover:bg-brand-50 transition-colors"
+                  className="p-1.5 rounded-lg transition-colors"
+                  style={{ color: 'rgba(255,255,255,0.45)' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.color = '#0FFCBE'; e.currentTarget.style.background = 'rgba(15,252,190,0.1)' }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.45)'; e.currentTarget.style.background = 'transparent' }}
                 >
                   <Edit2 className="w-3.5 h-3.5" />
                 </button>
@@ -131,7 +145,10 @@ export function IssueDetailPanel({ issueId, onClose }) {
                     if (window.confirm('Delete this issue? This cannot be undone.')) removeIssue()
                   }}
                   title="Delete issue"
-                  className="p-1.5 rounded-lg text-stone-400 hover:text-crimson-600 hover:bg-crimson-50 transition-colors"
+                  className="p-1.5 rounded-lg transition-colors"
+                  style={{ color: 'rgba(255,255,255,0.45)' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.color = '#ef4444'; e.currentTarget.style.background = 'rgba(239,68,68,0.1)' }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.45)'; e.currentTarget.style.background = 'transparent' }}
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
@@ -140,14 +157,22 @@ export function IssueDetailPanel({ issueId, onClose }) {
             {editing && (
               <button
                 onClick={() => setEditing(false)}
-                className="text-xs text-stone-400 hover:text-stone-600 px-2 py-1 rounded-lg
-                  hover:bg-stone-100 mr-1 transition-colors"
+                className="text-xs px-2 py-1 rounded-lg mr-1 transition-colors"
+                style={{ color: 'rgba(255,255,255,0.45)' }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = 'white'; e.currentTarget.style.background = 'rgba(255,255,255,0.1)' }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.45)'; e.currentTarget.style.background = 'transparent' }}
               >
                 Cancel
               </button>
             )}
-            <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-stone-100 transition-colors">
-              <X className="w-4 h-4 text-stone-500" />
+            <button
+              onClick={onClose}
+              className="p-1.5 rounded-lg transition-colors"
+              style={{ color: 'rgba(255,255,255,0.45)' }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = 'white'; e.currentTarget.style.background = 'rgba(255,255,255,0.1)' }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.45)'; e.currentTarget.style.background = 'transparent' }}
+            >
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>

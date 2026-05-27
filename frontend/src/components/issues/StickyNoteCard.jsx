@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { MessageSquare, MapPin, ThumbsUp, Clock } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
@@ -28,6 +29,15 @@ export function StickyNoteCard({ issue, index = 0, onClick }) {
   const { user } = useAuthStore()
   const queryClient = useQueryClient()
   const tilt = TILTS[index % TILTS.length]
+  const [tilt3D, setTilt3D] = useState({ x: 0, y: 0 })
+
+  const handleMouseMove = (e) => {
+    const r = e.currentTarget.getBoundingClientRect()
+    const cx = (e.clientX - r.left) / r.width - 0.5
+    const cy = (e.clientY - r.top) / r.height - 0.5
+    setTilt3D({ x: cy * -12, y: cx * 10 })
+  }
+  const handleMouseLeave3D = () => setTilt3D({ x: 0, y: 0 })
 
   const { mutate: vote, isPending: voting } = useMutation({
     mutationFn: () => toggleUpvote(issue.id),
@@ -49,16 +59,24 @@ export function StickyNoteCard({ issue, index = 0, onClick }) {
       className={`sticky-note relative flex flex-col rounded-lg border shadow-md
         cursor-pointer select-none overflow-hidden ${bgClass}`}
       style={{ '--tilt': `${tilt}deg`, transform: `rotate(${tilt}deg)` }}
-      whileHover={{ scale: 1.03, rotate: 0, zIndex: 10, shadow: '0 8px 30px rgba(0,0,0,0.12)' }}
+      whileHover={{ scale: 1.04, rotate: 0, zIndex: 10 }}
       whileTap={{ scale: 0.98 }}
       transition={{ type: 'spring', stiffness: 400, damping: 25 }}
       onClick={() => onClick?.(issue.id)}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave3D}
       layout
     >
       {/* Tape strip at top */}
       <div className={`h-2 w-full ${headerClass}`} />
 
-      <div className="p-4 flex flex-col gap-3 flex-1">
+      <div
+        className="p-4 flex flex-col gap-3 flex-1"
+        style={{
+          transform: `perspective(600px) rotateX(${tilt3D.x}deg) rotateY(${tilt3D.y}deg)`,
+          transition: 'transform 0.12s ease-out',
+        }}
+      >
         {/* Header row */}
         <div className="flex items-start justify-between gap-2">
           <h3 className="text-sm font-semibold text-gray-800 leading-snug line-clamp-2 flex-1">
