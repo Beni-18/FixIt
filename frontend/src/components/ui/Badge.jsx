@@ -1,3 +1,5 @@
+import { Flame } from 'lucide-react'
+
 const STATUS_STYLES = {
   raised:          'bg-crimson-50  text-crimson-800 border-crimson-200',
   processed:       'bg-amber-50    text-amber-800   border-amber-200',
@@ -36,7 +38,7 @@ export function HotBadge() {
   return (
     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs
       font-semibold bg-crimson-50 text-crimson-700 border border-crimson-100">
-      🔥 Trending
+      <Flame className="w-3 h-3" /> Trending
     </span>
   )
 }

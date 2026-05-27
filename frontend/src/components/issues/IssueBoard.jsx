@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { StickyNoteCard } from './StickyNoteCard'
 import { IssueDetailPanel } from './IssueDetailPanel'
-import { Filter } from 'lucide-react'
+import { Filter, Inbox } from 'lucide-react'
 
 const STATUS_FILTERS = [
   { value: '', label: 'All Issues' },
@@ -68,8 +68,8 @@ export function IssueBoard({ issues = [], onFilterChange, filters = {}, paginati
 
       {/* Board */}
       {issues.length === 0 ? (
-        <div className="text-center py-20 text-gray-400">
-          <p className="text-4xl mb-3">📭</p>
+        <div className="text-center py-20 text-stone-400 flex flex-col items-center gap-3">
+          <Inbox className="w-10 h-10" />
           <p className="text-sm">No issues found. All quiet on campus!</p>
         </div>
       ) : (

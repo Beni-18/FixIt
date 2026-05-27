@@ -43,7 +43,7 @@ export function Home() {
         >
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
-              {user?.role === 'admin' ? 'Admin Overview' : `Hey, ${user?.name?.split(' ')[0]} 👋`}
+              {user?.role === 'admin' ? 'Admin Overview' : `Hey, ${user?.name?.split(' ')[0]}`}
             </h1>
             <p className="text-sm text-gray-500 mt-0.5">
               {user?.role === 'admin'
@@ -86,7 +86,7 @@ export function Home() {
         {/* Board */}
         {!user?.verified && user?.role === 'student' && (
           <div className="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
-            <span className="text-amber-500">⚠️</span>
+            <AlertCircle className="w-4 h-4 text-amber-500 shrink-0" />
             <p className="text-sm text-amber-800">
               Your account is pending ID verification.{' '}
               <Link to="/profile" className="font-medium underline">Upload your ID card</Link> to get verified.

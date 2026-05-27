@@ -1,20 +1,24 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence, useInView } from 'framer-motion'
-import { Wrench, Eye, EyeOff, ShieldCheck, CheckCircle } from 'lucide-react'
+import {
+  Wrench, Eye, EyeOff, ShieldCheck, CheckCircle,
+  Monitor, Wifi, Zap, Droplets, Wind, Shield, Armchair, HelpCircle,
+  FileText, ThumbsUp, CheckCircle2, Image,
+} from 'lucide-react'
 import { login, register } from '../api/auth'
 import { useAuthStore } from '../store/authStore'
 import toast from 'react-hot-toast'
 import { useQuery } from '@tanstack/react-query'
 import api from '../api/axios'
 
-// ─── Demo cards shown in the hero fan ─────────────────────────────
+// ─── Demo cards for the hero fan — icons instead of emojis ────────
 const DEMO_CARDS = [
-  { emoji: '📽️', title: 'Projector out — Room 301', loc: 'Block A',   votes: 24 },
-  { emoji: '📡', title: 'Wi-Fi dead in Library 2F',  loc: 'Library',   votes: 31 },
-  { emoji: '💡', title: 'Street light near hostel',   loc: 'Main Road', votes: 18 },
-  { emoji: '🪑', title: 'Broken desks — 8 chairs',   loc: 'Block A',   votes: 12 },
-  { emoji: '🚿', title: 'Leaking tap, Block B wash',  loc: 'Block B',   votes: 9  },
+  { Icon: Monitor,  title: 'Projector out — Room 301', loc: 'Block A',   votes: 24, accent: 'bg-crimson-50 text-crimson-600' },
+  { Icon: Wifi,     title: 'Wi-Fi dead in Library 2F',  loc: 'Library',   votes: 31, accent: 'bg-sky-50    text-sky-600'     },
+  { Icon: Zap,      title: 'Street light near hostel',   loc: 'Main Road', votes: 18, accent: 'bg-amber-50  text-amber-600'   },
+  { Icon: Armchair, title: 'Broken desks — 8 chairs',   loc: 'Block A',   votes: 12, accent: 'bg-emerald-50 text-emerald-600' },
+  { Icon: Droplets, title: 'Leaking tap, Block B',       loc: 'Block B',   votes: 9,  accent: 'bg-blue-50   text-blue-600'    },
 ]
 
 const FAN = [
@@ -36,6 +40,7 @@ function CardFan() {
     <div className="relative h-36 flex items-center justify-center">
       {DEMO_CARDS.map((card, i) => {
         const pos = FAN[i]
+        const { Icon } = card
         return (
           <motion.div
             key={i}
@@ -50,7 +55,9 @@ function CardFan() {
           >
             <div className="h-1.5 bg-crimson-600 w-full" />
             <div className="p-2.5">
-              <div className="text-lg mb-1.5">{card.emoji}</div>
+              <div className={`w-7 h-7 rounded-lg flex items-center justify-center mb-1.5 ${card.accent}`}>
+                <Icon className="w-3.5 h-3.5" />
+              </div>
               <p className="text-[10.5px] font-semibold text-stone-800 line-clamp-2 leading-snug mb-2">
                 {card.title}
               </p>
@@ -58,7 +65,7 @@ function CardFan() {
                 <span className="text-[9px] text-stone-400 bg-stone-50 px-1.5 py-0.5 rounded-full border border-stone-100 truncate max-w-[60px]">
                   {card.loc}
                 </span>
-                <span className="text-[10px] font-bold text-crimson-600">↑{card.votes}</span>
+                <span className="text-[10px] font-bold text-crimson-600">+{card.votes}</span>
               </div>
             </div>
           </motion.div>
@@ -68,9 +75,9 @@ function CardFan() {
   )
 }
 
-// ─── Animated count-up (triggers when scrolled into view) ─────────
+// ─── Animated count-up ────────────────────────────────────────────
 function CountUp({ value, loading }) {
-  const ref = useRef(null)
+  const ref  = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-40px' })
   const [count, setCount] = useState(0)
 
@@ -80,8 +87,7 @@ function CountUp({ value, loading }) {
     const start = Date.now()
     const tick = () => {
       const p = Math.min((Date.now() - start) / dur, 1)
-      const ease = 1 - Math.pow(1 - p, 3)
-      setCount(Math.round(ease * value))
+      setCount(Math.round((1 - Math.pow(1 - p, 3)) * value))
       if (p < 1) requestAnimationFrame(tick)
     }
     requestAnimationFrame(tick)
@@ -90,7 +96,7 @@ function CountUp({ value, loading }) {
   return <span ref={ref}>{loading ? '—' : count}</span>
 }
 
-// ─── Inline form input (self-contained) ───────────────────────────
+// ─── Inline form input ────────────────────────────────────────────
 function FormInput({ label, error, showToggle, onToggle, ...props }) {
   return (
     <div className="flex flex-col gap-1">
@@ -116,7 +122,6 @@ function FormInput({ label, error, showToggle, onToggle, ...props }) {
   )
 }
 
-// ─── Red CTA submit button ─────────────────────────────────────────
 function SubmitBtn({ loading, children }) {
   return (
     <button
@@ -139,40 +144,44 @@ function SubmitBtn({ loading, children }) {
   )
 }
 
-// ─── Data constants ────────────────────────────────────────────────
+// ─── Data ─────────────────────────────────────────────────────────
 const STAT_KEYS = [
-  { key: 'total_issues',   label: 'Issues Reported' },
-  { key: 'resolved',       label: 'Resolved' },
-  { key: 'active_students',label: 'Active Students' },
-  { key: 'total_upvotes',  label: 'Upvotes Cast' },
+  { key: 'total_issues',    label: 'Issues Reported' },
+  { key: 'resolved',        label: 'Resolved' },
+  { key: 'active_students', label: 'Active Students' },
+  { key: 'total_upvotes',   label: 'Upvotes Cast' },
 ]
 
 const CATS = [
-  { e: '📽️', l: 'Classroom Equipment' }, { e: '💡', l: 'Electrical' },
-  { e: '📡', l: 'Wi-Fi / Network' },     { e: '🚿', l: 'Plumbing' },
-  { e: '🧹', l: 'Sanitation' },          { e: '🔒', l: 'Security' },
-  { e: '🪑', l: 'Furniture' },           { e: '❓', l: 'Other' },
+  { Icon: Monitor,    l: 'Classroom Equipment' },
+  { Icon: Zap,        l: 'Electrical'          },
+  { Icon: Wifi,       l: 'Wi-Fi / Network'     },
+  { Icon: Droplets,   l: 'Plumbing'            },
+  { Icon: Wind,       l: 'Sanitation'          },
+  { Icon: Shield,     l: 'Security'            },
+  { Icon: Armchair,   l: 'Furniture'           },
+  { Icon: HelpCircle, l: 'Other'               },
 ]
 
 const STEPS = [
   {
-    num: '01', title: 'Spot & Report',
+    num: '01', title: 'Spot & Report', Icon: FileText,
     body: 'Photo, description, exact location. Takes under a minute.',
-    icon: '📋', color: 'bg-amber-50 border-amber-100',
+    color: 'bg-amber-50 border-amber-100',
   },
   {
-    num: '02', title: 'Community Upvotes',
+    num: '02', title: 'Community Upvotes', Icon: ThumbsUp,
     body: 'Other students upvote what affects them. Priority auto-sorts.',
-    icon: '👆', color: 'bg-sky-50 border-sky-100',
+    color: 'bg-sky-50 border-sky-100',
   },
   {
-    num: '03', title: 'Admin Resolves',
-    body: 'Full audit trail: raised → processed → in-progress → resolved.',
-    icon: '✅', color: 'bg-emerald-50 border-emerald-100',
+    num: '03', title: 'Admin Resolves', Icon: CheckCircle2,
+    body: 'Full audit trail: raised to processed to in-progress to resolved.',
+    color: 'bg-emerald-50 border-emerald-100',
   },
 ]
 
-// ─── Main component ────────────────────────────────────────────────
+// ─── Main ─────────────────────────────────────────────────────────
 export function Landing() {
   const navigate = useNavigate()
   const { setAuth } = useAuthStore()
@@ -191,7 +200,7 @@ export function Landing() {
 
   const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ['public-stats'],
-    queryFn: () => api.get('/stats').then((r) => r.data),
+    queryFn:  () => api.get('/stats').then((r) => r.data),
     retry: false,
   })
 
@@ -250,14 +259,19 @@ export function Landing() {
           <div className="absolute inset-0 pointer-events-none opacity-[0.06]"
             style={{
               backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)',
-              backgroundSize: '26px 26px',
+              backgroundSize:  '26px 26px',
             }}
           />
-          {/* Decorative circle */}
-          <div className="absolute -bottom-24 -right-24 w-80 h-80 rounded-full
-            border border-white/5 pointer-events-none" />
-          <div className="absolute -bottom-12 -right-12 w-56 h-56 rounded-full
-            border border-white/5 pointer-events-none" />
+          {/* Decorative rings */}
+          <div className="absolute -bottom-24 -right-24 w-80 h-80 rounded-full border border-white/5 pointer-events-none" />
+          <div className="absolute -bottom-12 -right-12 w-56 h-56 rounded-full border border-white/5 pointer-events-none" />
+
+          {/*
+            IMAGE OPPORTUNITY — Campus hero photo
+            Replace the dot-grid above with a real campus photo:
+              <img src="/images/campus.jpg" className="absolute inset-0 w-full h-full object-cover opacity-20" />
+            Suggested shot: daytime exterior of Rathinam TC main building, portrait/landscape crop.
+          */}
 
           {/* Logo */}
           <motion.div
@@ -294,7 +308,7 @@ export function Landing() {
                 transition={{ duration: 0.6, delay: 0.18 }}
                 className="text-white/55 text-base mt-4 max-w-xs leading-relaxed"
               >
-                Report problems, upvote what matters —{' '}
+                Report problems, upvote what matters —
                 admins resolve them with a full audit trail.
               </motion.p>
             </div>
@@ -363,8 +377,6 @@ export function Landing() {
 
             <AnimatePresence mode="wait">
               {mode === 'login' ? (
-
-                /* ─ Login form ─────────────────────────────────── */
                 <motion.form
                   key="login"
                   initial={{ opacity: 0, x: -10 }}
@@ -378,7 +390,6 @@ export function Landing() {
                     <p className="text-sm text-stone-400 mt-0.5">Sign in to your FixIT account</p>
                   </div>
 
-                  {/* Login type toggle */}
                   <div className="flex gap-2">
                     {[['student', 'Student', null], ['admin', 'Admin', ShieldCheck]].map(([val, label, Icon]) => (
                       <button
@@ -399,7 +410,9 @@ export function Landing() {
                   {loginType === 'admin' && (
                     <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
                       <ShieldCheck className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
-                      <p className="text-xs text-amber-700">Admin login. Unauthorised access attempts are logged.</p>
+                      <p className="text-xs text-amber-700">
+                        Admin login. Unauthorised access attempts are logged.
+                      </p>
                     </div>
                   )}
 
@@ -423,10 +436,7 @@ export function Landing() {
                   />
                   <SubmitBtn loading={loading}>Sign In</SubmitBtn>
                 </motion.form>
-
               ) : (
-
-                /* ─ Register form ──────────────────────────────── */
                 <motion.form
                   key="register"
                   initial={{ opacity: 0, x: 10 }}
@@ -442,8 +452,7 @@ export function Landing() {
 
                   <FormInput label="Full name" placeholder="Your full name"
                     value={form.name} onChange={set('name')} required error={errors.name} />
-                  <FormInput label="College email" type="email"
-                    placeholder="you@rathinam.in"
+                  <FormInput label="College email" type="email" placeholder="you@rathinam.in"
                     value={form.email} onChange={set('email')} required error={errors.email} />
 
                   <div className="grid grid-cols-2 gap-3">
@@ -465,7 +474,6 @@ export function Landing() {
 
                   <SubmitBtn loading={loading}>Create Account</SubmitBtn>
                 </motion.form>
-
               )}
             </AnimatePresence>
           </div>
@@ -480,16 +488,17 @@ export function Landing() {
           className="flex gap-12 whitespace-nowrap"
           style={{ animation: 'ticker 24s linear infinite' }}
         >
-          {[...CATS, ...CATS].map((c, i) => (
-            <span key={i} className="text-brand-300 text-sm font-medium flex-shrink-0">
-              {c.e} {c.l}
+          {[...CATS, ...CATS].map(({ Icon, l }, i) => (
+            <span key={i} className="flex items-center gap-2 text-brand-300 text-sm font-medium flex-shrink-0">
+              <Icon className="w-3.5 h-3.5" />
+              {l}
             </span>
           ))}
         </div>
       </div>
 
       {/* ═══════════════════════════════════════════════════════════
-          STATS BAR — animated count-up from real DB data
+          STATS BAR
           ═══════════════════════════════════════════════════════════ */}
       <div className="bg-white border-b border-[#E8E2DA] py-12">
         <div className="max-w-3xl mx-auto px-6 grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
@@ -511,7 +520,22 @@ export function Landing() {
       </div>
 
       {/* ═══════════════════════════════════════════════════════════
-          HOW IT WORKS — 3 steps
+          IMAGE BANNER PLACEHOLDER
+          Add a wide campus photo here — e.g. students in a lecture
+          hall or a campus aerial shot. Recommended: 1400×400px,
+          landscape. Place file at frontend/public/images/campus-banner.jpg
+          then replace this block with:
+            <img src="/images/campus-banner.jpg" className="w-full h-56 object-cover" />
+          ═══════════════════════════════════════════════════════════ */}
+      <div className="w-full h-48 bg-stone-100 border-y border-[#E8E2DA] flex items-center justify-center gap-3">
+        <Image className="w-6 h-6 text-stone-300" />
+        <span className="text-sm text-stone-300 font-medium">
+          Campus photo — place 1400×400px image here
+        </span>
+      </div>
+
+      {/* ═══════════════════════════════════════════════════════════
+          HOW IT WORKS
           ═══════════════════════════════════════════════════════════ */}
       <div className="py-16 px-6 bg-[#FAF8F5]">
         <div className="max-w-4xl mx-auto">
@@ -526,23 +550,35 @@ export function Landing() {
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            {STEPS.map((step, i) => (
-              <motion.div
-                key={step.num}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.14 }}
-                className={`rounded-2xl border p-6 ${step.color}`}
-              >
-                <div className="text-3xl mb-4">{step.icon}</div>
-                <div className="text-xs font-bold text-crimson-600 mb-1 uppercase tracking-wider">
-                  Step {step.num}
-                </div>
-                <h3 className="text-base font-semibold text-stone-900 mb-2">{step.title}</h3>
-                <p className="text-sm text-stone-500 leading-relaxed">{step.body}</p>
-              </motion.div>
-            ))}
+            {STEPS.map((step, i) => {
+              const { Icon } = step
+              return (
+                <motion.div
+                  key={step.num}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.14 }}
+                  className={`rounded-2xl border p-6 ${step.color}`}
+                >
+                  {/*
+                    IMAGE OPPORTUNITY — Step screenshot
+                    Replace the icon block below with a small app
+                    screenshot (e.g. the raise-complaint form, the
+                    board, the admin panel). Recommended: 400×220px.
+                    Use: <img src="/images/step-{i+1}.png" className="w-full rounded-lg mb-4 border" />
+                  */}
+                  <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center mb-4 border border-black/5">
+                    <Icon className="w-5 h-5 text-stone-700" />
+                  </div>
+                  <div className="text-xs font-bold text-crimson-600 mb-1 uppercase tracking-wider">
+                    Step {step.num}
+                  </div>
+                  <h3 className="text-base font-semibold text-stone-900 mb-2">{step.title}</h3>
+                  <p className="text-sm text-stone-500 leading-relaxed">{step.body}</p>
+                </motion.div>
+              )
+            })}
           </div>
         </div>
       </div>
@@ -552,22 +588,24 @@ export function Landing() {
           ═══════════════════════════════════════════════════════════ */}
       <div className="py-12 px-6 bg-white border-t border-[#E8E2DA]">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-sm font-semibold text-stone-400 uppercase tracking-widest text-center mb-6">
+          <h2 className="text-xs font-semibold text-stone-400 uppercase tracking-widest text-center mb-6">
             What students report
           </h2>
           <div className="grid grid-cols-4 sm:grid-cols-8 gap-3">
-            {CATS.map((c, i) => (
+            {CATS.map(({ Icon, l }, i) => (
               <motion.div
-                key={c.l}
+                key={l}
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.05 }}
-                className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-[#FAF8F5]
-                  border border-[#E8E2DA] hover:border-brand-300 hover:bg-brand-50 transition-colors"
+                className="group flex flex-col items-center gap-2 p-3 rounded-xl bg-[#FAF8F5]
+                  border border-[#E8E2DA] hover:border-brand-300 hover:bg-brand-50 transition-colors cursor-default"
               >
-                <span className="text-xl">{c.e}</span>
-                <span className="text-[10px] text-stone-500 text-center leading-tight">{c.l.split(' / ')[0]}</span>
+                <Icon className="w-5 h-5 text-stone-500 group-hover:text-brand-600 transition-colors" />
+                <span className="text-[10px] text-stone-500 text-center leading-tight">
+                  {l.split(' / ')[0]}
+                </span>
               </motion.div>
             ))}
           </div>
