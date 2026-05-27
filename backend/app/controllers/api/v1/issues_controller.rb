@@ -4,7 +4,8 @@ module Api
       before_action :set_issue, only: [:show, :update, :destroy]
 
       def index
-        issues = filtered_issues.paginate(page: params[:page], per_page: 12)
+        per_page = (params[:per_page]&.to_i || 12).then { |n| [[n, 1].max, 100].min }
+        issues = filtered_issues.paginate(page: params[:page], per_page: per_page)
         render_paginated(issues, blueprint: IssueBlueprint, view: :feed,
                          current_user: current_user, url_helpers: url_helpers)
       end

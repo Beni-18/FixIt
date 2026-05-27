@@ -8,6 +8,7 @@ import { Landing }        from './pages/Landing'
 import { Home }           from './pages/Home'
 import { RaiseComplaint } from './pages/RaiseComplaint'
 import { Profile }        from './pages/Profile'
+import { MyReports }      from './pages/MyReports'
 import { AdminLayout }    from './pages/admin/AdminLayout'
 import { Dashboard }      from './pages/admin/Dashboard'
 import { AdminIssues }    from './pages/admin/AdminIssues'
@@ -44,6 +45,10 @@ function AnimatedRoutes() {
 
         <Route path="/raise" element={
           <RequireAuth><RaiseComplaint /></RequireAuth>
+        } />
+
+        <Route path="/my-reports" element={
+          <RequireAuth><MyReports /></RequireAuth>
         } />
 
         <Route path="/profile" element={

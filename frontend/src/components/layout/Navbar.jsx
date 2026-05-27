@@ -1,6 +1,6 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Wrench, Plus, User, LogOut, LayoutDashboard, Menu, X } from 'lucide-react'
+import { Wrench, Plus, User, LogOut, LayoutDashboard, Menu, X, FileText } from 'lucide-react'
 import { useState } from 'react'
 import { useAuthStore } from '../../store/authStore'
 import { logout } from '../../api/auth'
@@ -44,6 +44,12 @@ export function Navbar() {
         {user && (
           <nav className="hidden sm:flex items-center gap-1">
             <NavLink to="/home" active={active('/home')}>Feed</NavLink>
+
+            {user.role !== 'admin' && (
+              <NavLink to="/my-reports" active={active('/my-reports')}>
+                <FileText className="w-3.5 h-3.5" /> My Reports
+              </NavLink>
+            )}
 
             {user.role !== 'admin' && (
               <Link to="/raise">
@@ -113,6 +119,9 @@ export function Navbar() {
           className="sm:hidden border-t border-[#DCE4EF] bg-white px-4 py-3 flex flex-col gap-1"
         >
           <MobileLink to="/home" onClick={() => setOpen(false)}>Feed</MobileLink>
+          {user.role !== 'admin' && (
+            <MobileLink to="/my-reports" onClick={() => setOpen(false)}>My Reports</MobileLink>
+          )}
           {user.role !== 'admin' && (
             <Link
               to="/raise"
