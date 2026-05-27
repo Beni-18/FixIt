@@ -1,0 +1,22 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: localhost
+  port: 5432
+  username: bennish
+  password: 638158
+
+development:
+  <<: *default
+  database: fixit_development
+
+test:
+  <<: *default
+  database: fixit_test
+
+production:
+  <<: *default
+  database: fixit_production
+  username: <%= ENV["FIXIT_DATABASE_USER"] %>
+  password: <%= ENV["FIXIT_DATABASE_PASSWORD"] %>

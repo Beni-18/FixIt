@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+/* ─── Brand palette ──────────────────────────────────────────── */
+@theme {
+  /* Forest green — primary brand */
+  --color-brand-50:  #eef6ef;
+  --color-brand-100: #d0e9d2;
+  --color-brand-200: #a8d4ac;
+  --color-brand-300: #7bbf82;
+  --color-brand-400: #4ea558;
+  --color-brand-500: #2d8a38;
+  --color-brand-600: #1C5C28;
+  --color-brand-700: #164820;
+  --color-brand-800: #103518;
+  --color-brand-900: #0a2210;
+
+  /* Crimson — urgency, CTAs, raised issues */
+  --color-crimson-50:  #fef2f2;
+  --color-crimson-100: #fddede;
+  --color-crimson-200: #fbb8b8;
+  --color-crimson-300: #f78888;
+  --color-crimson-400: #f05454;
+  --color-crimson-500: #e03030;
+  --color-crimson-600: #C62828;
+  --color-crimson-700: #a82020;
+  --color-crimson-800: #8a1a1a;
+  --color-crimson-900: #6b1313;
+
+  /* Warm neutrals — replaces clinical cool grays */
+  --color-stone-bg:   #FAF8F5;
+  --color-stone-card: #FFFFFF;
+  --color-stone-border: #E8E2DA;
+  --color-stone-muted: #8A8278;
+}
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { -webkit-font-smoothing: antialiased; }
+
+  body {
+    margin: 0;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--color-stone-bg);
+    color: #1A1A1A;
+  }
+}
+
+/* Sticky note animation */
+@keyframes wobble-in {
+  0%   { transform: rotate(0deg) scale(0.95); opacity: 0; }
+  60%  { transform: rotate(1.5deg) scale(1.02); opacity: 1; }
+  100% { transform: rotate(var(--tilt, 0deg)) scale(1); opacity: 1; }
+}
+
+.sticky-note { animation: wobble-in 0.35s ease-out forwards; }
+
+/* Horizontal ticker scroll */
+@keyframes ticker {
+  0%   { transform: translateX(0) }
+  100% { transform: translateX(-50%) }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar       { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #D5CFC5; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #B5AFA5; }
+
+:focus-visible { outline: 2px solid #1C5C28; outline-offset: 2px; }

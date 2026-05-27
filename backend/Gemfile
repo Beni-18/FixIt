@@ -1,0 +1,37 @@
+source "https://rubygems.org"
+
+gem "rails", "~> 7.2.3", ">= 7.2.3.1"
+gem "pg", "~> 1.1"
+gem "puma", ">= 5.0"
+gem "bootsnap", require: false
+gem "tzinfo-data", platforms: %i[ windows jruby ]
+
+# Auth
+gem "bcrypt", "~> 3.1.7"
+gem "jwt", "~> 2.8"
+gem "devise", "~> 4.9"
+gem "devise-jwt", "~> 0.11"
+
+# Authorization
+gem "pundit", "~> 2.3"
+
+# Serializers
+gem "blueprinter", "~> 1.0"
+
+# Pagination
+gem "will_paginate", "~> 4.0"
+
+# CORS
+gem "rack-cors"
+
+# File uploads
+gem "active_storage_validations", "~> 1.1"
+gem "image_processing", "~> 1.12"
+
+group :development, :test do
+  gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
+end
+
+group :development do
+  gem "rubocop-rails-omakase", require: false
+end
