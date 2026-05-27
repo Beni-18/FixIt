@@ -6,6 +6,46 @@ import {
   Monitor, Wifi, Zap, Droplets, Wind, Shield, Armchair, HelpCircle,
   FileText, ThumbsUp, CheckCircle2, Image, ArrowRight,
 } from 'lucide-react'
+
+/* ─── Masked line reveal (the hurryupandhavefun effect) ─────── */
+const EASE_OUT_EXPO = [0.16, 1, 0.3, 1]
+
+function HeroReveal() {
+  const lines = [
+    { text: 'Campus',   mint: false },
+    { text: 'issues,',  mint: false },
+    { text: 'actually', mint: true  },
+    { text: 'fixed.',   mint: true  },
+  ]
+  return (
+    <h1
+      className="font-black tracking-tight"
+      style={{ fontSize: 'clamp(2.8rem, 6.2vw, 5rem)', lineHeight: 1.04 }}
+    >
+      {lines.map((line, i) => (
+        /* overflow:hidden is the "curtain" — text is invisible until it slides up into the aperture */
+        <div key={i} style={{ overflow: 'hidden', lineHeight: 1.12 }}>
+          <motion.span
+            style={{
+              display: 'block',
+              color: line.mint ? '#0FFCBE' : '#FFFFFF',
+              transformOrigin: 'left bottom',
+            }}
+            initial={{ y: '108%', rotateZ: 1.4 }}
+            animate={{ y: '0%',   rotateZ: 0    }}
+            transition={{
+              duration: 0.9,
+              delay:    0.22 + i * 0.11,
+              ease:     EASE_OUT_EXPO,
+            }}
+          >
+            {line.text}
+          </motion.span>
+        </div>
+      ))}
+    </h1>
+  )
+}
 import { login, register } from '../api/auth'
 import { useAuthStore } from '../store/authStore'
 import toast from 'react-hot-toast'
@@ -250,7 +290,11 @@ export function Landing() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: '#F0F4F9' }}>
+    <motion.div
+      className="min-h-screen flex flex-col"
+      style={{ background: '#F0F4F9' }}
+      exit={{ opacity: 0, transition: { duration: 0.25, ease: 'easeIn' } }}
+    >
 
       {/* ═══════════════════════════════════════════════════════
           HERO — full viewport, dark navy
@@ -320,7 +364,7 @@ export function Landing() {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
+              transition={{ duration: 0.5, delay: 0.1, ease: EASE_OUT_EXPO }}
               className="inline-flex items-center gap-2"
             >
               <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#0FFCBE' }} />
@@ -330,22 +374,14 @@ export function Landing() {
               </span>
             </motion.div>
 
-            {/* Headline */}
-            <motion.h1
-              initial={{ opacity: 0, y: 36 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              className="text-5xl lg:text-6xl xl:text-7xl font-black text-white leading-[1.02] tracking-tight"
-            >
-              Campus<br />
-              issues,<br />
-              <span style={{ color: '#0FFCBE' }}>actually<br />fixed.</span>
-            </motion.h1>
+            {/* ── Masked line-by-line headline reveal ── */}
+            <HeroReveal />
 
+            {/* Subtitle fades in after the last line lands */}
             <motion.p
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              transition={{ duration: 0.6, delay: 0.72, ease: EASE_OUT_EXPO }}
               className="text-base leading-relaxed max-w-xs"
               style={{ color: 'rgba(255,255,255,0.48)' }}
             >
@@ -355,9 +391,9 @@ export function Landing() {
 
             {/* Card fan */}
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.78, duration: 0.55, ease: EASE_OUT_EXPO }}
             >
               <p className="text-[10px] font-bold uppercase tracking-[0.22em] mb-5"
                 style={{ color: 'rgba(255,255,255,0.2)' }}>
@@ -368,9 +404,9 @@ export function Landing() {
 
             {/* CTA + bullets */}
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.65 }}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.0, duration: 0.5, ease: EASE_OUT_EXPO }}
               className="flex flex-col sm:flex-row items-start gap-6"
             >
               <button
@@ -696,6 +732,6 @@ export function Landing() {
         </div>
       </div>
 
-    </div>
+    </motion.div>
   )
 }

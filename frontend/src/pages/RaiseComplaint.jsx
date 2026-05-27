@@ -9,6 +9,7 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createIssue } from '../api/issues'
 import { Navbar } from '../components/layout/Navbar'
+import { PageTransition } from '../components/layout/PageTransition'
 import toast from 'react-hot-toast'
 
 const CATEGORY_OPTIONS = [
@@ -108,6 +109,7 @@ export function RaiseComplaint() {
   }
 
   return (
+    <PageTransition>
     <div className="min-h-screen" style={{ background: '#F0F4F9' }}>
       <Navbar />
 
@@ -393,5 +395,6 @@ export function RaiseComplaint() {
         </motion.form>
       </main>
     </div>
+    </PageTransition>
   )
 }
