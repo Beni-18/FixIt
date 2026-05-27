@@ -2,19 +2,31 @@
 
 /* ─── Brand palette ──────────────────────────────────────────── */
 @theme {
-  /* Forest green — primary brand */
-  --color-brand-50:  #eef6ef;
-  --color-brand-100: #d0e9d2;
-  --color-brand-200: #a8d4ac;
-  --color-brand-300: #7bbf82;
-  --color-brand-400: #4ea558;
-  --color-brand-500: #2d8a38;
-  --color-brand-600: #1C5C28;
-  --color-brand-700: #164820;
-  --color-brand-800: #103518;
-  --color-brand-900: #0a2210;
+  /* Royal Blue — primary brand (#106EBE as 600) */
+  --color-brand-50:  #EBF5FF;
+  --color-brand-100: #CCDEFF;
+  --color-brand-200: #99BCFF;
+  --color-brand-300: #6698EE;
+  --color-brand-400: #3478DD;
+  --color-brand-500: #1A68C8;
+  --color-brand-600: #106EBE;
+  --color-brand-700: #0A569B;
+  --color-brand-800: #064178;
+  --color-brand-900: #042C56;
 
-  /* Crimson — urgency, CTAs, raised issues */
+  /* Mint — vivid accent / CTA (#0FFCBE as 400) */
+  --color-mint-50:  #ECFEF8;
+  --color-mint-100: #C9FCF0;
+  --color-mint-200: #88F7DF;
+  --color-mint-300: #44F0CA;
+  --color-mint-400: #0FFCBE;
+  --color-mint-500: #00D8A0;
+  --color-mint-600: #00B484;
+  --color-mint-700: #008F69;
+  --color-mint-800: #006B4E;
+  --color-mint-900: #004734;
+
+  /* Crimson — urgency, raised status */
   --color-crimson-50:  #fef2f2;
   --color-crimson-100: #fddede;
   --color-crimson-200: #fbb8b8;
@@ -26,11 +38,11 @@
   --color-crimson-800: #8a1a1a;
   --color-crimson-900: #6b1313;
 
-  /* Warm neutrals — replaces clinical cool grays */
-  --color-stone-bg:   #FAF8F5;
-  --color-stone-card: #FFFFFF;
-  --color-stone-border: #E8E2DA;
-  --color-stone-muted: #8A8278;
+  /* Cool neutrals */
+  --color-stone-bg:     #F0F4F9;
+  --color-stone-card:   #FFFFFF;
+  --color-stone-border: #DCE4EF;
+  --color-stone-muted:  #7A8899;
 }
 
 @layer base {
@@ -42,7 +54,7 @@
     margin: 0;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     background: var(--color-stone-bg);
-    color: #1A1A1A;
+    color: #1A1A2E;
   }
 }
 
@@ -52,19 +64,24 @@
   60%  { transform: rotate(1.5deg) scale(1.02); opacity: 1; }
   100% { transform: rotate(var(--tilt, 0deg)) scale(1); opacity: 1; }
 }
-
 .sticky-note { animation: wobble-in 0.35s ease-out forwards; }
 
-/* Horizontal ticker scroll */
+/* Horizontal ticker */
 @keyframes ticker {
   0%   { transform: translateX(0) }
   100% { transform: translateX(-50%) }
 }
 
+/* Hero glow pulse */
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.12; }
+  50%       { opacity: 0.24; }
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar       { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #D5CFC5; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #B5AFA5; }
+::-webkit-scrollbar-thumb { background: #B8C8D8; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #8899AA; }
 
-:focus-visible { outline: 2px solid #1C5C28; outline-offset: 2px; }
+:focus-visible { outline: 2px solid #106EBE; outline-offset: 2px; }
