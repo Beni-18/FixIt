@@ -84,13 +84,12 @@ export function Profile() {
             }}
           />
 
-          {/*
-            IMAGE PLACEHOLDER — Profile cover photo
-            Add a wide campus/abstract photo at: frontend/public/images/profile-cover.jpg
-            Recommended size: 1200×240px
-            Then uncomment the line below:
-            <img src="/images/profile-cover.jpg" alt="" className="absolute inset-0 w-full h-full object-cover opacity-10 pointer-events-none" />
-          */}
+          <img
+            src="/Images/profile-cover.jpg"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+            style={{ opacity: 0.12 }}
+          />
 
           <div className="relative z-10 max-w-2xl mx-auto px-6 pt-8 pb-6">
             <motion.div

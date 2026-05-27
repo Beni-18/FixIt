@@ -4,7 +4,7 @@ import { motion, AnimatePresence, useInView } from 'framer-motion'
 import {
   Wrench, Eye, EyeOff, ShieldCheck, CheckCircle,
   Monitor, Wifi, Zap, Droplets, Wind, Shield, Armchair, HelpCircle,
-  FileText, ThumbsUp, CheckCircle2, Image, ArrowRight,
+  FileText, ThumbsUp, CheckCircle2, ArrowRight,
 } from 'lucide-react'
 
 /* ─── Masked line reveal (the hurryupandhavefun effect) ─────── */
@@ -330,13 +330,12 @@ export function Landing() {
             }}
           />
 
-          {/*
-            IMAGE OPPORTUNITY — Campus hero background
-            Add a campus photo behind the gradient:
-              <img src="/images/campus-hero.jpg"
-                className="absolute inset-0 w-full h-full object-cover opacity-10" />
-            Recommended: 1200×900px campus exterior, desaturated.
-          */}
+          <img
+            src="/Images/Rathinam-Arts-Campus-1.avif"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+            style={{ opacity: 0.08 }}
+          />
 
           {/* Logo */}
           <motion.div
@@ -625,21 +624,19 @@ export function Landing() {
         </div>
       </div>
 
-      {/* ═══════════════════════════════════════════════════════
-          IMAGE BANNER PLACEHOLDER
-          Replace with: <img src="/images/campus-banner.jpg" className="w-full h-56 object-cover" />
-          Recommended: 1400×380px wide campus shot — lecture hall, aerial, or students.
-          ═══════════════════════════════════════════════════════ */}
-      <div className="w-full h-52 flex items-center justify-center gap-3"
-        style={{
-          background: '#0E2440',
-          borderTop: '1px solid rgba(255,255,255,0.05)',
-          borderBottom: '1px solid rgba(255,255,255,0.05)',
-        }}>
-        <Image className="w-6 h-6" style={{ color: 'rgba(15,252,190,0.2)' }} />
-        <span className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.18)' }}>
-          Campus photo — 1400×380px banner goes here
-        </span>
+      {/* ── Campus photo banner ── */}
+      <div className="w-full h-52 relative overflow-hidden">
+        <img
+          src="/Images/campus-banner.jpg"
+          alt="Rathinam campus"
+          className="w-full h-full object-cover"
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background: 'linear-gradient(90deg, rgba(6,17,30,0.65) 0%, rgba(11,29,53,0.3) 50%, rgba(6,17,30,0.65) 100%)',
+          }}
+        />
       </div>
 
       {/* ═══════════════════════════════════════════════════════
@@ -676,17 +673,23 @@ export function Landing() {
                 transition={{ delay: i * 0.15 }}
                 className="relative bg-white rounded-2xl border border-stone-200 p-7 text-center shadow-sm"
               >
-                {/*
-                  IMAGE OPPORTUNITY: Replace the step number block with a screenshot.
-                  e.g. <img src="/images/step-{i+1}.png" className="w-full rounded-xl mb-5 border border-stone-100" />
-                  Recommended: 400×220px screenshot of the raise form, board, admin panel.
-                */}
-                <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5
-                    text-white font-black text-xl"
-                  style={{ background: 'linear-gradient(135deg, #106EBE, #0A569B)' }}
-                >
-                  {step.num}
+                <div className="relative rounded-xl overflow-hidden mb-5">
+                  <img
+                    src={`/Images/step-${i + 1}.jpg`}
+                    alt={step.title}
+                    className="w-full h-36 object-cover"
+                  />
+                  <div
+                    className="absolute inset-0"
+                    style={{ background: 'linear-gradient(to bottom, transparent 40%, rgba(6,17,30,0.55) 100%)' }}
+                  />
+                  <div
+                    className="absolute bottom-2 right-2 w-8 h-8 rounded-lg flex items-center
+                      justify-center text-white font-black text-sm"
+                    style={{ background: 'rgba(16,110,190,0.88)' }}
+                  >
+                    {step.num}
+                  </div>
                 </div>
                 <h3 className="text-base font-bold text-stone-900 mb-2">{step.title}</h3>
                 <p className="text-sm text-stone-500 leading-relaxed">{step.body}</p>
