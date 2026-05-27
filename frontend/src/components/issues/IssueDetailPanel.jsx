@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { X, MapPin, ThumbsUp, Send, Clock, ChevronRight, Edit2, Trash2, Save } from 'lucide-react'
+import { X, MapPin, ThumbsUp, Send, Clock, ChevronRight, Edit2, Trash2, Save,
+  Monitor, Wifi, Zap, Droplets, Wind, Shield, Armchair, HelpCircle } from 'lucide-react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { getIssue, addComment, deleteComment, toggleUpvote, updateIssue, deleteIssue } from '../../api/issues'
 import { StatusBadge, CategoryBadge } from '../ui/Badge'
@@ -13,8 +14,14 @@ const STATUS_STEPS  = ['raised', 'processed', 'being_resolved', 'resolved']
 const STEP_LABELS   = { raised: 'Raised', processed: 'Processed', being_resolved: 'In Progress', resolved: 'Resolved' }
 
 const CATEGORIES = [
-  'Classroom Equipment', 'Electrical', 'Wi-Fi / Network',
-  'Plumbing', 'Sanitation', 'Security', 'Furniture', 'Other',
+  { label: 'Classroom Equipment', Icon: Monitor  },
+  { label: 'Electrical',          Icon: Zap      },
+  { label: 'Wi-Fi / Network',     Icon: Wifi     },
+  { label: 'Plumbing',            Icon: Droplets },
+  { label: 'Sanitation',          Icon: Wind     },
+  { label: 'Security',            Icon: Shield   },
+  { label: 'Furniture',           Icon: Armchair },
+  { label: 'Other',               Icon: HelpCircle },
 ]
 const LOCATIONS = [
   'Block A', 'Block B', 'Block C', 'Block D',
@@ -187,67 +194,120 @@ export function IssueDetailPanel({ issueId, onClose }) {
 
               {editing ? (
                 /* ── Edit form ──────────────────────────────────── */
-                <div className="space-y-4">
-                  <div className="bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
-                    <p className="text-xs text-amber-700 font-medium">Editing your issue</p>
-                  </div>
-
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs font-medium text-stone-600">Title</label>
+                <motion.div
+                  key="edit-form"
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+                  className="space-y-5"
+                >
+                  {/* Title */}
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-bold uppercase tracking-widest text-stone-400">
+                        Title
+                      </label>
+                      <span className="text-[10px] tabular-nums" style={{ color: 'rgba(0,0,0,0.28)' }}>
+                        {editForm.title.length}/120
+                      </span>
+                    </div>
                     <input
                       value={editForm.title}
                       onChange={setField('title')}
-                      className="w-full px-3 py-2 text-sm rounded-lg border border-[#E8E2DA]
-                        focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none"
+                      className="w-full px-4 py-3 rounded-xl text-sm bg-white text-stone-900 outline-none transition-all"
+                      style={{ border: '2px solid #DCE4EF' }}
+                      onFocus={(e) => { e.target.style.borderColor = '#0FFCBE'; e.target.style.boxShadow = '0 0 0 4px rgba(15,252,190,0.08)' }}
+                      onBlur={(e)  => { e.target.style.borderColor = '#DCE4EF'; e.target.style.boxShadow = 'none' }}
                       maxLength={120}
                     />
                   </div>
 
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs font-medium text-stone-600">Description</label>
+                  {/* Description */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold uppercase tracking-widest text-stone-400">
+                      Description
+                    </label>
                     <textarea
                       value={editForm.description}
                       onChange={setField('description')}
                       rows={4}
-                      className="w-full px-3 py-2 text-sm rounded-lg border border-[#E8E2DA] resize-none
-                        focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none"
+                      className="w-full px-4 py-3 rounded-xl text-sm bg-white text-stone-900 outline-none transition-all resize-none"
+                      style={{ border: '2px solid #DCE4EF' }}
+                      onFocus={(e) => { e.target.style.borderColor = '#0FFCBE'; e.target.style.boxShadow = '0 0 0 4px rgba(15,252,190,0.08)' }}
+                      onBlur={(e)  => { e.target.style.borderColor = '#DCE4EF'; e.target.style.boxShadow = 'none' }}
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="flex flex-col gap-1">
-                      <label className="text-xs font-medium text-stone-600">Location</label>
-                      <select
-                        value={editForm.location}
-                        onChange={setField('location')}
-                        className="w-full px-3 py-2 text-sm rounded-lg border border-[#E8E2DA]
-                          focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none bg-white"
-                      >
-                        {LOCATIONS.map((l) => <option key={l} value={l}>{l}</option>)}
-                      </select>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <label className="text-xs font-medium text-stone-600">Category</label>
-                      <select
-                        value={editForm.category}
-                        onChange={setField('category')}
-                        className="w-full px-3 py-2 text-sm rounded-lg border border-[#E8E2DA]
-                          focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none bg-white"
-                      >
-                        {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
-                      </select>
+                  {/* Location */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold uppercase tracking-widest text-stone-400">
+                      Location
+                    </label>
+                    <select
+                      value={editForm.location}
+                      onChange={setField('location')}
+                      className="w-full px-4 py-3 rounded-xl text-sm bg-white text-stone-900 outline-none transition-all cursor-pointer"
+                      style={{ border: '2px solid #DCE4EF' }}
+                      onFocus={(e) => { e.target.style.borderColor = '#0FFCBE' }}
+                      onBlur={(e)  => { e.target.style.borderColor = '#DCE4EF' }}
+                    >
+                      {LOCATIONS.map((l) => <option key={l} value={l}>{l}</option>)}
+                    </select>
+                  </div>
+
+                  {/* Category pills */}
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-widest text-stone-400">
+                      Category
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {CATEGORIES.map(({ label, Icon: CatIcon }) => {
+                        const active = editForm.category === label
+                        return (
+                          <motion.button
+                            key={label}
+                            type="button"
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => setEditForm((p) => ({ ...p, category: label }))}
+                            className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all text-left"
+                            style={{
+                              border:     `2px solid ${active ? '#0FFCBE' : '#DCE4EF'}`,
+                              background:  active ? 'rgba(15,252,190,0.07)' : 'white',
+                              color:       active ? '#0A569B' : '#64748b',
+                              boxShadow:   active ? '0 0 0 3px rgba(15,252,190,0.12)' : 'none',
+                            }}
+                          >
+                            <div
+                              className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 transition-all"
+                              style={{ background: active ? 'rgba(15,252,190,0.18)' : '#F0F4F9' }}
+                            >
+                              <CatIcon className="w-3.5 h-3.5"
+                                style={{ color: active ? '#0FFCBE' : '#94a3b8' }} />
+                            </div>
+                            <span className="truncate">{label.split(' / ')[0]}</span>
+                          </motion.button>
+                        )
+                      })}
                     </div>
                   </div>
 
-                  <Button
-                    size="sm"
+                  {/* Save */}
+                  <motion.button
+                    whileTap={{ scale: 0.97 }}
                     onClick={saveEdit}
-                    loading={saving}
-                    className="w-full justify-center"
+                    disabled={saving}
+                    className="w-full py-3 rounded-xl text-sm font-bold text-[#06111E]
+                      flex items-center justify-center gap-2 disabled:opacity-50 transition-all"
+                    style={{ background: '#0FFCBE', boxShadow: '0 2px 14px rgba(15,252,190,0.28)' }}
+                    onMouseEnter={(e) => { if (!saving) e.currentTarget.style.background = '#44F0CA' }}
+                    onMouseLeave={(e) => { if (!saving) e.currentTarget.style.background = '#0FFCBE' }}
                   >
-                    <Save className="w-3.5 h-3.5" /> Save Changes
-                  </Button>
-                </div>
+                    {saving
+                      ? <div className="w-4 h-4 border-2 border-[#06111E]/30 border-t-[#06111E] rounded-full animate-spin" />
+                      : <Save className="w-4 h-4" />}
+                    {saving ? 'Saving…' : 'Save Changes'}
+                  </motion.button>
+                </motion.div>
               ) : (
                 /* ── View mode ──────────────────────────────────── */
                 <>
