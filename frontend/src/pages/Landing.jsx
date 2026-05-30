@@ -228,12 +228,13 @@ export function Landing() {
   const { setAuth } = useAuthStore()
   const formRef = useRef(null)
 
-  const [mode,      setMode]      = useState('login')
-  const [loginType, setLoginType] = useState('student')
-  const [showPw,    setShowPw]    = useState(false)
-  const [loading,   setLoading]   = useState(false)
-  const [errors,    setErrors]    = useState({})
-  const [form,      setForm]      = useState({
+  const [mode,         setMode]         = useState('login')
+  const [loginType,    setLoginType]    = useState('student')
+  const [showPw,       setShowPw]       = useState(false)
+  const [loading,      setLoading]      = useState(false)
+  const [errors,       setErrors]       = useState({})
+  const [loginSuccess, setLoginSuccess] = useState(false)
+  const [form,         setForm]         = useState({
     name: '', email: '', password: '', password_confirmation: '',
     student_id: '', department: '', phone: '',
   })
@@ -253,11 +254,14 @@ export function Landing() {
       const res   = await login(form.email, form.password)
       const token = res.headers['authorization']?.replace('Bearer ', '')
       setAuth(res.data.user, token)
-      res.data.user.role === 'admin' ? navigate('/admin') : navigate('/home')
       toast.success(`Welcome back, ${res.data.user.name?.split(' ')[0]}!`)
+      setLoginSuccess(true)
+      const dest = res.data.user.role === 'admin' ? '/admin' : '/home'
+      setTimeout(() => navigate(dest), 700)
     } catch (err) {
       toast.error(err.response?.data?.error || 'Invalid email or password')
-    } finally { setLoading(false) }
+      setLoading(false)
+    }
   }
 
   const handleRegister = async (e) => {
@@ -734,6 +738,67 @@ export function Landing() {
           </div>
         </div>
       </div>
+
+      {/* ── Login success flash overlay ───────────────────────── */}
+      <AnimatePresence>
+        {loginSuccess && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.28, ease: 'easeOut' }}
+            className="fixed inset-0 z-50 flex items-center justify-center"
+            style={{ background: 'rgba(6,17,30,0.88)', backdropFilter: 'blur(10px)' }}
+          >
+            <motion.div
+              initial={{ scale: 0.72, opacity: 0, y: 16 }}
+              animate={{ scale: 1,    opacity: 1, y: 0  }}
+              transition={{ type: 'spring', stiffness: 320, damping: 22, delay: 0.08 }}
+              className="flex flex-col items-center gap-5"
+            >
+              {/* Pulsing ring */}
+              <div className="relative">
+                <motion.div
+                  animate={{ scale: [1, 1.18, 1], opacity: [0.4, 0, 0.4] }}
+                  transition={{ duration: 1.6, repeat: Infinity, ease: 'easeOut' }}
+                  className="absolute inset-0 rounded-full"
+                  style={{ background: 'rgba(15,252,190,0.2)' }}
+                />
+                <div
+                  className="w-20 h-20 rounded-full flex items-center justify-center relative z-10"
+                  style={{
+                    background: 'rgba(15,252,190,0.1)',
+                    border: '1.5px solid rgba(15,252,190,0.4)',
+                  }}
+                >
+                  <CheckCircle className="w-9 h-9" style={{ color: '#0FFCBE' }} />
+                </div>
+              </div>
+
+              <div className="text-center">
+                <p className="text-white font-bold text-lg tracking-tight">Signed in</p>
+                <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.38)' }}>
+                  Taking you to your dashboard…
+                </p>
+              </div>
+
+              {/* Progress bar */}
+              <motion.div
+                className="h-0.5 rounded-full overflow-hidden"
+                style={{ width: 120, background: 'rgba(255,255,255,0.1)' }}
+              >
+                <motion.div
+                  initial={{ width: '0%' }}
+                  animate={{ width: '100%' }}
+                  transition={{ duration: 0.65, ease: 'linear' }}
+                  className="h-full rounded-full"
+                  style={{ background: '#0FFCBE' }}
+                />
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     </motion.div>
   )
