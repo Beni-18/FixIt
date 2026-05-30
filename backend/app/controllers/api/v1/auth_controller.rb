@@ -19,14 +19,14 @@ module Api
       def me
         render_success(
           UserBlueprint.render_as_hash(current_user, view: :profile,
-            url_helpers: url_helpers)
+            url_helpers: url_helpers, base_url: request.base_url)
         )
       end
 
       def update_profile
         if current_user.update(profile_params)
           render_success(UserBlueprint.render_as_hash(current_user, view: :profile,
-            url_helpers: url_helpers))
+            url_helpers: url_helpers, base_url: request.base_url))
         else
           render_errors(current_user.errors.full_messages)
         end

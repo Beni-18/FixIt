@@ -12,7 +12,9 @@ class UserBlueprint < Blueprinter::Base
     fields :name, :email, :role, :student_id, :phone, :department,
            :verified, :active, :created_at
     field :id_card_url do |user, opts|
-      opts[:url_helpers]&.url_for(user.id_card_image) if user.id_card_image.attached?
+      if user.id_card_image.attached? && opts[:url_helpers] && opts[:base_url]
+        opts[:url_helpers].rails_blob_url(user.id_card_image.blob, host: opts[:base_url])
+      end
     end
     field :issues_count do |user|
       user.issues.count

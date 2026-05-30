@@ -7,12 +7,12 @@ module Api
         def index
           users = filtered_users.paginate(page: params[:page], per_page: 20)
           render_paginated(users, blueprint: UserBlueprint, view: :admin,
-                           url_helpers: url_helpers)
+                           url_helpers: url_helpers, base_url: request.base_url)
         end
 
         def show
           render_success(UserBlueprint.render_as_hash(@user, view: :admin,
-            url_helpers: url_helpers))
+            url_helpers: url_helpers, base_url: request.base_url))
         end
 
         def staff_list
